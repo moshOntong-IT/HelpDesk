@@ -5,6 +5,7 @@ import { useAuth } from "../../../Components/AuthProvider";
 import HomeNav from "../../../Components/HomeNav";
 import Navbar from "../../../v2/Components/Navbar/Navbar";
 import TicketBox from "../../../v2/Components/TicketBox";
+import TicketList from "../../../v2/Components/TicketList/TicketList";
 
 function Home() {
   const { userState } = useAuth();
@@ -22,7 +23,7 @@ function Home() {
       <Flex h="100vh">
         <Flex flex="2" h="full">
           <Navbar />
-          <Box flex="1 0 auto" minW="100px"></Box>
+          <TicketList />
         </Flex>
         <Flex flex="5" h="full">
           <Flex w="full" h="full" flexDirection="column">

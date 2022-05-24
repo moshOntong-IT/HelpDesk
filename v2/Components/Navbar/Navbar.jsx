@@ -1,5 +1,6 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { FaTicketAlt } from "react-icons/fa";
+import { VStack, Box, IconButton, Tooltip } from "@chakra-ui/react";
 function Navbar() {
   return (
     <Box
@@ -7,7 +8,20 @@ function Navbar() {
       borderRightWidth="2px"
       borderRightColor="whiteAlpha.200"
       minW="80px"
-    ></Box>
+      py="20px"
+      px="10px"
+    >
+      <VStack w="full" h="full">
+        <Tooltip label="Ticket" placement="right">
+          <IconButton
+            aria-label="Call Segun"
+            size="lg"
+            colorScheme="facebook"
+            icon={<FaTicketAlt />}
+          ></IconButton>
+        </Tooltip>
+      </VStack>
+    </Box>
   );
 }
 
