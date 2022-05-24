@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import TicketReplyForm from "./TicketReplyForm";
 import TicketBoxHeader from "./TicketBoxHeader";
+import TicketBoxChatArea from "./TicketBoxChatArea";
 
 function TicketBox() {
   return (
@@ -9,6 +10,7 @@ function TicketBox() {
       <Flex w="full" h="full" flexDirection="column">
         <Box flex="1 0 auto">
           <TicketBoxHeader />
+          <TicketBoxChatArea />
         </Box>
 
         <TicketReplyForm />
