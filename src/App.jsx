@@ -25,14 +25,14 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="home" element={<Home />}>
-          <Route index element={<Navigate to="helpdesk" replace />} />
+          {/* <Route index element={<Navigate to="helpdesk" replace />} />
           <Route path="helpdesk" element={<HelpDesk />}>
             <Route index element={<Tickets />} />
             <Route path="tickets" element={<Tickets />} />
             <Route path="departments" element={<Departments />} />
             <Route path="users" element={<Users />} />
           </Route>
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<Profile />} /> */}
         </Route>
         <Route path="login" element={<Login />}></Route>
 
