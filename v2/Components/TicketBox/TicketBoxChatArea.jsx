@@ -5,7 +5,6 @@ import TicketBoxChat from "./TicketBoxChat";
 function TicketBoxChatArea() {
   return (
     <VStack
-      position="relative"
       py="10px"
       h="85%"
       overflow="auto"
@@ -21,6 +20,7 @@ function TicketBoxChatArea() {
           borderRadius: "24px",
         },
       }}
+      spacing="20px"
     >
       <TicketBoxChat isOwner={false} />
       <TicketBoxChat isOwner={true} />

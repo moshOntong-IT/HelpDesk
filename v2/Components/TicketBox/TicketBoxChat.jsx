@@ -2,22 +2,19 @@ import React from "react";
 import { Flex, Avatar, Box, Text } from "@chakra-ui/react";
 function TicketBoxChat({ isOwner }) {
   return (
-    <Box
-      flexDirection={isOwner ? "row" : "row-reverse"}
-      position="absolute"
-      left={isOwner ? "none" : "0"}
-      right={isOwner ? "0" : "none"}
-      bg="gray.400"
-      p="10px"
-      rounded="lg"
-    >
-      <Flex>
+    <Flex w="full" justifyContent={isOwner ? "right" : "left"}>
+      <Flex
+        bg="gray.400"
+        p="10px"
+        rounded="lg"
+        flexDirection={!isOwner ? "row" : "row-reverse"}
+      >
         <Avatar name="Muslimin Ontong" />
-        <Text ml="10px">
+        <Text mx="10px">
           HELo aisdsiadsjiiaodjsaoidj asodjasoijdaio djasoi jdasi d
         </Text>
       </Flex>
-    </Box>
+    </Flex>
   );
 }
 
