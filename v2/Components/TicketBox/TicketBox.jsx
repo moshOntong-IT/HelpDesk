@@ -8,7 +8,7 @@ function TicketBox() {
   return (
     <Box flex="5" bg="whiteAlpha.200" borderTopLeftRadius="3xl" p="20px">
       <Flex w="full" h="full" flexDirection="column">
-        <Box flex="1 0 auto">
+        <Box flex="1 0 auto" maxH="75vh">
           <TicketBoxHeader />
           <TicketBoxChatArea />
         </Box>

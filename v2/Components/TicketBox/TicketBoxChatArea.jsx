@@ -7,6 +7,7 @@ function TicketBoxChatArea() {
     <VStack
       py="10px"
       h="85%"
+      maxH="500px"
       overflow="auto"
       css={{
         "&::-webkit-scrollbar": {
@@ -24,6 +25,8 @@ function TicketBoxChatArea() {
     >
       <TicketBoxChat isOwner={false} />
       <TicketBoxChat isOwner={true} />
+      <TicketBoxChat isOwner={false} />
+      <TicketBoxChat isOwner={false} />
       <TicketBoxChat isOwner={false} />
       <TicketBoxChat isOwner={false} />
     </VStack>

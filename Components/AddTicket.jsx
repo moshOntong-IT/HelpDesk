@@ -105,7 +105,7 @@ function AddTicket({ isOpen, onClose }) {
                       isLoading={isLoading}
                       disabled={!touched.subject}
                       type="submit"
-                      colorScheme="teal"
+                      colorScheme="facebook"
                       width="full"
                     >
                       Submit

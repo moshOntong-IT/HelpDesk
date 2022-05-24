@@ -9,7 +9,7 @@ import {
   Center,
   Button,
 } from "@chakra-ui/react";
-import { TimeIcon } from "@chakra-ui/icons";
+import { InfoIcon, TimeIcon } from "@chakra-ui/icons";
 
 function TicketBoxHeader() {
   return (
@@ -34,6 +34,9 @@ function TicketBoxHeader() {
           <Text>Muslimin Ontong</Text>
           <HStack>
             <TimeIcon /> <Text>August 3, 2020 8:00 PM</Text>
+          </HStack>
+          <HStack>
+            <InfoIcon /> <Text>Assistant Department</Text>
           </HStack>
         </HStack>
       </VStack>

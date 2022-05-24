@@ -4,6 +4,7 @@ import { Link as ReactLink, useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../../Components/AuthProvider";
 import HomeNav from "../../../Components/HomeNav";
 import Navbar from "../../../v2/Components/Navbar/Navbar";
+import NavHeader from "../../../v2/Components/Navbar/NavHeader";
 import TicketBox from "../../../v2/Components/TicketBox/TicketBox";
 import TicketList from "../../../v2/Components/TicketList/TicketList";
 
@@ -27,7 +28,7 @@ function Home() {
         </Flex>
         <Flex flex="5" h="full">
           <Flex w="full" h="full" flexDirection="column">
-            <Box w="full" flex="1" maxH="10%"></Box>
+            <NavHeader />
             <TicketBox />
           </Flex>
         </Flex>
