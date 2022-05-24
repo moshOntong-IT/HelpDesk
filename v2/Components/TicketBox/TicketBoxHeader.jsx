@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Flex,
   VStack,
@@ -10,8 +10,14 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { InfoIcon, TimeIcon } from "@chakra-ui/icons";
+import { useTickets } from "../Context/TicketContext";
 
-function TicketBoxHeader() {
+function TicketBoxHeader({ ticket }) {
+  // const { ticket, selectedTicket } = useTickets();
+  const { user, createdAt, subject } = ticket;
+  const { firstName, lastName, department } = user;
+  const { name } = department;
+
   return (
     <Flex
       w="full"
@@ -22,7 +28,7 @@ function TicketBoxHeader() {
     >
       <VStack flex="1 0 auto">
         <Heading w="full" fontSize="1.5rem">
-          This is a little ticket chuchu
+          {subject}
         </Heading>
         <HStack
           spacing="50px"
@@ -31,12 +37,12 @@ function TicketBoxHeader() {
           //   justifyContent="space-evenly"
           color="whiteAlpha.700"
         >
-          <Text>Muslimin Ontong</Text>
+          <Text>{firstName + " " + lastName}</Text>
           <HStack>
-            <TimeIcon /> <Text>August 3, 2020 8:00 PM</Text>
+            <TimeIcon /> <Text>{createdAt}</Text>
           </HStack>
           <HStack>
-            <InfoIcon /> <Text>Assistant Department</Text>
+            <InfoIcon /> <Text>{name}</Text>
           </HStack>
         </HStack>
       </VStack>

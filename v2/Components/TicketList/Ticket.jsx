@@ -1,10 +1,17 @@
 import React from "react";
 import { Box, Text, Badge, Flex, VStack } from "@chakra-ui/react";
 import TimeDiff from "js-time-diff";
-function Ticket({ status, subject, name, date }) {
+import { useTickets } from "../Context/TicketContext";
+function Ticket({ ticket }) {
+  const { createdAt, subject, status, ticketUuid, user, id } = ticket;
+  const { firstName, lastName } = user;
+  const { setSelectedTicket } = useTickets();
   return (
     <VStack
       align="left"
+      onClick={() => {
+        setSelectedTicket(ticket);
+      }}
       cursor="pointer"
       w="full"
       maxWidth="280px"
@@ -41,8 +48,8 @@ function Ticket({ status, subject, name, date }) {
         color="whiteAlpha.800"
         fontSize="0.8rem"
       >
-        <Text>{name}</Text>
-        <Text>{TimeDiff(date)}</Text>
+        <Text>{firstName + " " + lastName}</Text>
+        <Text>{TimeDiff(createdAt)}</Text>
       </Flex>
     </VStack>
   );

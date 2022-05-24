@@ -12,11 +12,12 @@ import {
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import { io } from "socket.io-client";
 import Ticket from "./Ticket";
+import { useTickets } from "../Context/TicketContext";
 function TicketList() {
-  const [tickets, setTickets] = useState();
-  const [isLoading, setLoading] = useState(true);
+  const { tickets, setTickets, setSelectedTicket, isLoading, setLoading } =
+    useTickets();
+
   // const { data, refetch, isLoading, isSuccess } = useQuery(
   //   "tickets",
   //   getTickets,
@@ -33,6 +34,7 @@ function TicketList() {
       );
       // console.log(typeof data);
       setTickets(data);
+      setSelectedTicket(data[0]);
       setLoading(false);
 
       // console.log(tickets);
@@ -41,27 +43,7 @@ function TicketList() {
     getTickets();
   }, []);
 
-  useEffect(() => {
-    const socket = io("ws://localhost:5000");
-
-    socket.on("connnection", () => {
-      console.log("connected to server");
-    });
-
-    socket.on("add-ticket", (newTicket) => {
-      setTickets(newTicket);
-    });
-
-    socket.on("message", (message) => {
-      console.log(message);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Socket disconnecting");
-    });
-  }, []);
-
-  console.log(tickets);
+  // console.log(tickets);
 
   return (
     <Box flex="1 0 auto" minW="100px">
@@ -102,20 +84,9 @@ function TicketList() {
         >
           {isLoading && <Text color="white">Loading</Text>}
           {!isLoading &&
-            tickets.map(
-              ({ createdAt, subject, status, ticketUuid, user }, index) => {
-                const { firstName, lastName } = user;
-                return (
-                  <Ticket
-                    status={status}
-                    key={index}
-                    date={createdAt}
-                    subject={subject}
-                    name={firstName + " " + lastName}
-                  />
-                );
-              }
-            )}
+            tickets.map((ticket, index) => {
+              return <Ticket ticket={ticket} key={index} />;
+            })}
         </VStack>
       </VStack>
     </Box>

@@ -8,6 +8,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import AuthProvider from "../Components/AuthProvider";
 import theme from "../utils/theme";
+import TicketProvider from "../v2/Components/Context/TicketContext";
 
 const apiURL = import.meta.env.VITE_API_URL;
 // if (process.env.NODE_ENV === "development") {
@@ -26,11 +27,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <BrowserRouter>
-          <ChakraProvider theme={theme}>
-            <App />
-          </ChakraProvider>
-        </BrowserRouter>
+        <TicketProvider>
+          <BrowserRouter>
+            <ChakraProvider theme={theme}>
+              <App />
+            </ChakraProvider>
+          </BrowserRouter>
+        </TicketProvider>
       </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
