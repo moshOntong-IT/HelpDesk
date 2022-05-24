@@ -1,8 +1,10 @@
-import { Box, Link, Text, Center, VStack } from "@chakra-ui/react";
+import { Box, Link, Text, Center, VStack, Flex } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Link as ReactLink, useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../../Components/AuthProvider";
 import HomeNav from "../../../Components/HomeNav";
+import Navbar from "../../../v2/Components/Navbar/Navbar";
+import TicketBox from "../../../v2/Components/TicketBox";
 
 function Home() {
   const { userState } = useAuth();
@@ -16,12 +18,28 @@ function Home() {
   }, []);
   // console.log("running");
   return (
-    <Box
-      h="100vh"
-      bgGradient="linear-gradient(99.87deg, #E2FFE5 6.72%, rgba(255, 255, 255, 0) 99.63%)"
-      overflow="hidden"
-    >
-      <Center w="100%" h="100%">
+    <Box h="100vh" bgColor="gray.800" overflow="hidden" position="relative">
+      <Flex h="100vh">
+        <Flex flex="2" h="full">
+          <Navbar />
+          <Box flex="1 0 auto" minW="100px"></Box>
+        </Flex>
+        <Flex flex="5" h="full">
+          <Flex w="full" h="full" flexDirection="column">
+            <Box w="full" flex="1" maxH="10%"></Box>
+            <TicketBox />
+          </Flex>
+        </Flex>
+      </Flex>
+      {/* <Box
+        position="absolute"
+        right="0"
+        bottom="0"
+        w="75%"
+        h="90vh"
+        bg="whiteAlpha.50"
+      ></Box> */}
+      {/* <Center w="100%" h="100%">
         <Box w="65%" h="90%">
           <VStack w="100%" h="100%">
             <HomeNav />
@@ -30,7 +48,7 @@ function Home() {
             </Box>
           </VStack>
         </Box>
-      </Center>
+      </Center> */}
     </Box>
   );
 }
