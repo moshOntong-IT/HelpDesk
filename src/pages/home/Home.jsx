@@ -4,7 +4,7 @@ import { Link as ReactLink, useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../../Components/AuthProvider";
 import HomeNav from "../../../Components/HomeNav";
 import Navbar from "../../../v2/Components/Navbar/Navbar";
-import TicketBox from "../../../v2/Components/TicketBox";
+import TicketBox from "../../../v2/Components/TicketBox/TicketBox";
 import TicketList from "../../../v2/Components/TicketList/TicketList";
 
 function Home() {
