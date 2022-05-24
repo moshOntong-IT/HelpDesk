@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -8,7 +8,61 @@ import {
   Heading,
   Badge,
 } from "@chakra-ui/react";
+
+import axios from "axios";
+import { useQuery } from "react-query";
+
+import { io } from "socket.io-client";
+import Ticket from "./Ticket";
 function TicketList() {
+  const [tickets, setTickets] = useState();
+  const [isLoading, setLoading] = useState(true);
+  // const { data, refetch, isLoading, isSuccess } = useQuery(
+  //   "tickets",
+  //   getTickets,
+  //   {
+  //     enabled: false,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
+
+  useEffect(() => {
+    const getTickets = async () => {
+      const { data } = await axios.get(
+        import.meta.env.VITE_API_URL + "/api/tickets"
+      );
+      // console.log(typeof data);
+      setTickets(data);
+      setLoading(false);
+
+      // console.log(tickets);
+    };
+
+    getTickets();
+  }, []);
+
+  useEffect(() => {
+    const socket = io("ws://localhost:5000");
+
+    socket.on("connnection", () => {
+      console.log("connected to server");
+    });
+
+    socket.on("add-ticket", (newTicket) => {
+      setTickets(newTicket);
+    });
+
+    socket.on("message", (message) => {
+      console.log(message);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Socket disconnecting");
+    });
+  }, []);
+
+  console.log(tickets);
+
   return (
     <Box flex="1 0 auto" minW="100px">
       <VStack h="full" w="full" spacing="20px">
@@ -46,58 +100,33 @@ function TicketList() {
             },
           }}
         >
-          {Array(8)
-            .fill(1)
-            .map((_, index) => {
-              return (
-                <Box
-                  cursor="pointer"
-                  w="full"
-                  maxWidth="280px"
-                  bg="whiteAlpha.200"
-                  p="10px"
-                  rounded="md"
-                  key={index}
-                  color="white"
-                >
-                  <Text
-                    noOfLines="1"
-                    as="strong"
-                    fontSize="1.3rem"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                  >
-                    This is a title of ticket try to ellipsis
-                  </Text>
-                  <Badge
-                    //   colorScheme={
-                    //     status === "Pending"
-                    //       ? "orange"
-                    //       : status === "Answered"
-                    //       ? "green"
-                    //       : "red"
-                    //   }
-                    colorScheme="orange"
-                  >
-                    Pending
-                  </Badge>
-
-                  <Flex
-                    justifyContent="space-between"
-                    w="full"
-                    color="whiteAlpha.800"
-                    fontSize="0.8rem"
-                  >
-                    <Text>Mosh Ontong</Text>
-                    <Text>2 seconds ago</Text>
-                  </Flex>
-                </Box>
-              );
-            })}
+          {isLoading && <Text color="white">Loading</Text>}
+          {!isLoading &&
+            tickets.map(
+              ({ createdAt, subject, status, ticketUuid, user }, index) => {
+                const { firstName, lastName } = user;
+                return (
+                  <Ticket
+                    status={status}
+                    key={index}
+                    date={createdAt}
+                    subject={subject}
+                    name={firstName + " " + lastName}
+                  />
+                );
+              }
+            )}
         </VStack>
       </VStack>
     </Box>
   );
 }
 
+async function getTickets() {
+  const { data } = await axios.get(
+    import.meta.env.VITE_API_URL + "/api/tickets"
+  );
+  // console.log(typeof data);
+  return data;
+}
 export default TicketList;

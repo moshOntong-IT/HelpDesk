@@ -17,7 +17,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60000,
+      staleTime: Infinity,
     },
   },
 });

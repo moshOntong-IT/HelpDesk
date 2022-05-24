@@ -6,7 +6,8 @@ import { useAuth } from "../../../Components/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import AddTicket from "../../../Components/AddTicket";
 function NavHeader() {
-  const { logout } = useAuth();
+  // const { userState, logout } = useAuth();
+  // const { id } = userState;
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (

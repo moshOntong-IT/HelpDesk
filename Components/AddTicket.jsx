@@ -48,7 +48,7 @@ function AddTicket({ isOpen, onClose }) {
   async function createTicket(value) {
     const [id, data] = value;
     await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/add/ticket?createdBy=${id}`,
+      `${import.meta.env.VITE_API_SOCKET_URL}/api/add/ticket?createdBy=${id}`,
       data,
       {
         headers: {
