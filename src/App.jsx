@@ -11,6 +11,7 @@ import Profile from "./pages/home/Profile";
 import Tickets from "./pages/home/helpdesk/Tickets";
 import Departments from "./pages/home/helpdesk/Departments";
 import Users from "./pages/home/helpdesk/Users";
+import TicketBox from "../v2/Components/TicketBox/TicketBox";
 
 // async function getDepartments() {
 //   const { data } = await axios.get("/api/comments");
@@ -23,16 +24,11 @@ function App() {
     <Box>
       {/* <Text>Header</Text> */}
       <Routes>
-        <Route index element={<Home />} />
         <Route path="home" element={<Home />}>
-          {/* <Route index element={<Navigate to="helpdesk" replace />} />
-          <Route path="helpdesk" element={<HelpDesk />}>
-            <Route index element={<Tickets />} />
-            <Route path="tickets" element={<Tickets />} />
-            <Route path="departments" element={<Departments />} />
-            <Route path="users" element={<Users />} />
+          <Route index element={<HelpDesk />} />
+          <Route path="box" element={<HelpDesk />}>
+            <Route index element={<TicketBox />} />
           </Route>
-          <Route path="profile" element={<Profile />} /> */}
         </Route>
         <Route path="login" element={<Login />}></Route>
 

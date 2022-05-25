@@ -2,11 +2,6 @@ import { Box, Link, Text, Center, VStack, Flex } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Link as ReactLink, useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../../Components/AuthProvider";
-import HomeNav from "../../../Components/HomeNav";
-import Navbar from "../../../v2/Components/Navbar/Navbar";
-import NavHeader from "../../../v2/Components/Navbar/NavHeader";
-import TicketBox from "../../../v2/Components/TicketBox/TicketBox";
-import TicketList from "../../../v2/Components/TicketList/TicketList";
 
 function Home() {
   const { userState } = useAuth();
@@ -21,18 +16,7 @@ function Home() {
   // console.log("running");
   return (
     <Box h="100vh" bgColor="gray.800" overflow="hidden" position="relative">
-      <Flex h="100vh">
-        <Flex flex="2" h="full">
-          <Navbar />
-          <TicketList />
-        </Flex>
-        <Flex flex="5" h="full">
-          <Flex w="full" h="full" flexDirection="column">
-            <NavHeader />
-            <TicketBox />
-          </Flex>
-        </Flex>
-      </Flex>
+      <Outlet />
       {/* <Box
         position="absolute"
         right="0"
