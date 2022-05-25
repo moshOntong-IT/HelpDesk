@@ -5,9 +5,12 @@ import TicketBoxChat from "./TicketBoxChat";
 import axios from "axios";
 import { useAuth } from "../../../Components/AuthProvider";
 import { useSocket } from "../Context/SocketProvider";
+import { useParams } from "react-router-dom";
 
 function TicketBoxChatArea() {
   const { selectedTicket, comments, setComments } = useTickets();
+  const [newComments, setNewComments] = useState([]);
+  const params = useParams();
   const { userState } = useAuth();
   const messagesEndRef = useRef(null);
   const { socket } = useSocket();
@@ -22,12 +25,21 @@ function TicketBoxChatArea() {
     return () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-  }, [setComments]);
+  }, [setNewComments]);
+
+  useEffect(() => {
+    if (comments.length > 0) {
+      const { ticket } = comments[0];
+      // const { id } = selectedTicket;
+      // console.log(ticket.id == params.id);
+      if (ticket.id == params.id) {
+        setNewComments(comments);
+      }
+    }
+  }, [comments]);
   ///ADD
   useEffect(() => {
     socket.on("add-comment", (newComment) => {
-      const { ticket } = newComment[0];
-      const { id } = selectedTicket;
       setComments(newComment);
       // console.log(ticket.id + " " + id);
       // if (ticket.id === id) {
@@ -55,7 +67,7 @@ function TicketBoxChatArea() {
         `${import.meta.env.VITE_API_URL}/api/tickets/comments/${id}`
       );
 
-      setComments(data);
+      setNewComments(data);
 
       // console.log(isOwner);
     };
@@ -83,7 +95,7 @@ function TicketBoxChatArea() {
       }}
       spacing="20px"
     >
-      {comments.map((data, index) => {
+      {newComments.map((data, index) => {
         const { user, reply } = data;
         const { firstName, lastName, id } = user;
         return (
