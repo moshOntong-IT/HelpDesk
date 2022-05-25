@@ -23,10 +23,21 @@ function TicketBoxChatArea() {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
   }, [setComments]);
-
+  ///ADD
   useEffect(() => {
     socket.on("add-comment", (newComment) => {
+      const { ticket } = newComment[0];
+      const { id } = selectedTicket;
       setComments(newComment);
+      // console.log(ticket.id + " " + id);
+      // if (ticket.id === id) {
+      //   setComments(newComment);
+      // }
+      // if (comments != undefined) {
+      //   if (comments[0].user.id === id) {
+      //     setComments(newComment);
+      //   }
+      // }
     });
 
     return () => {
@@ -73,9 +84,16 @@ function TicketBoxChatArea() {
       spacing="20px"
     >
       {comments.map((data, index) => {
-        const { user } = data;
-        const { id } = user;
-        return <TicketBoxChat isOwner={id === userState.id} key={index} />;
+        const { user, reply } = data;
+        const { firstName, lastName, id } = user;
+        return (
+          <TicketBoxChat
+            isOwner={id === userState.id}
+            key={index}
+            chat={reply}
+            name={firstName + " " + lastName}
+          />
+        );
       })}
       <div ref={messagesEndRef} />
     </VStack>

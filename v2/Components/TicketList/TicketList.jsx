@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import Ticket from "./Ticket";
 import { useTickets } from "../Context/TicketContext";
@@ -19,26 +19,29 @@ function TicketList() {
   const { tickets, setTickets, setSelectedTicket, isLoading, setLoading } =
     useTickets();
   const { socket } = useSocket();
+  const queryClient = useQueryClient();
+  const {
+    refetch,
+    isLoading: queryIsLoading,
 
-  // const { data, refetch, isLoading, isSuccess } = useQuery(
-  //   "tickets",
-  //   getTickets,
-  //   {
-  //     enabled: false,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // );
+    isSuccess,
+  } = useQuery("tickets", getTickets, {
+    enabled: false,
+    refetchOnWindowFocus: false,
+  });
   useEffect(() => {
     socket.on("add-ticket", (newTicket) => {
       setTickets(newTicket);
+    });
+
+    socket.on("update-ticket", (updateTicket) => {
+      setTickets(updateTicket);
     });
   }, []);
 
   useEffect(() => {
     const getTickets = async () => {
-      const { data } = await axios.get(
-        import.meta.env.VITE_API_URL + "/api/tickets"
-      );
+      const { data } = await refetch();
       // console.log(typeof data);
       setTickets(data);
       setSelectedTicket(data[0]);
@@ -49,6 +52,21 @@ function TicketList() {
 
     getTickets();
   }, []);
+  // useEffect(() => {
+  //   const getTickets = async () => {
+  //     const { data } = await axios.get(
+  //       import.meta.env.VITE_API_URL + "/api/tickets"
+  //     );
+  //     // console.log(typeof data);
+  //     setTickets(data);
+  //     setSelectedTicket(data[0]);
+  //     setLoading(false);
+
+  //     // console.log(tickets);
+  //   };
+
+  //   getTickets();
+  // }, []);
 
   // console.log(tickets);
 
