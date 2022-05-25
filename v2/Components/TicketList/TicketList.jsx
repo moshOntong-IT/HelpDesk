@@ -14,9 +14,11 @@ import { useQuery } from "react-query";
 
 import Ticket from "./Ticket";
 import { useTickets } from "../Context/TicketContext";
+import { useSocket } from "../Context/SocketProvider";
 function TicketList() {
   const { tickets, setTickets, setSelectedTicket, isLoading, setLoading } =
     useTickets();
+  const { socket } = useSocket();
 
   // const { data, refetch, isLoading, isSuccess } = useQuery(
   //   "tickets",
@@ -26,6 +28,11 @@ function TicketList() {
   //     refetchOnWindowFocus: false,
   //   }
   // );
+  useEffect(() => {
+    socket.on("add-ticket", (newTicket) => {
+      setTickets(newTicket);
+    });
+  }, []);
 
   useEffect(() => {
     const getTickets = async () => {

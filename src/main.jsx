@@ -9,6 +9,7 @@ import { BrowserRouter } from "react-router-dom";
 import AuthProvider from "../Components/AuthProvider";
 import theme from "../utils/theme";
 import TicketProvider from "../v2/Components/Context/TicketContext";
+import SocketProvider from "../v2/Components/Context/SocketProvider";
 
 const apiURL = import.meta.env.VITE_API_URL;
 // if (process.env.NODE_ENV === "development") {
@@ -26,15 +27,17 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TicketProvider>
-          <BrowserRouter>
-            <ChakraProvider theme={theme}>
-              <App />
-            </ChakraProvider>
-          </BrowserRouter>
-        </TicketProvider>
-      </AuthProvider>
+      <SocketProvider>
+        <AuthProvider>
+          <TicketProvider>
+            <BrowserRouter>
+              <ChakraProvider theme={theme}>
+                <App />
+              </ChakraProvider>
+            </BrowserRouter>
+          </TicketProvider>
+        </AuthProvider>
+      </SocketProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

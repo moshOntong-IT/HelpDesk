@@ -17,6 +17,7 @@ function TicketProvider({ children }) {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState();
   const [isLoading, setLoading] = useState(true);
+  const [comments, setComments] = useState([]);
 
   //   useEffect(() => {
   //     const ticket = tickets.find(({ id }) => {
@@ -27,25 +28,6 @@ function TicketProvider({ children }) {
   //     // console.log(ticket);
   //   }, [selectedTicket]);
 
-  useEffect(() => {
-    const socket = io("ws://localhost:5000");
-
-    socket.on("connnection", () => {
-      console.log("connected to server");
-    });
-
-    socket.on("add-ticket", (newTicket) => {
-      setTickets(newTicket);
-    });
-
-    socket.on("message", (message) => {
-      console.log(message);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Socket disconnecting");
-    });
-  }, []);
   const value = {
     tickets,
     setTickets,
@@ -53,6 +35,8 @@ function TicketProvider({ children }) {
     setSelectedTicket,
     isLoading,
     setLoading,
+    comments,
+    setComments,
   };
   return (
     <TicketsContext.Provider value={value}>{children}</TicketsContext.Provider>

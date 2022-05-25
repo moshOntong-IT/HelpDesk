@@ -10,7 +10,51 @@ import {
 } from "@chakra-ui/react";
 import { IoIosSend } from "react-icons/io";
 import { Formik, Field } from "formik";
+import { useMutation } from "react-query";
+import { useAuth } from "../../../Components/AuthProvider";
+import { useTickets } from "../Context/TicketContext";
+
+import axios from "axios";
 function TicketReplyForm() {
+  const { userState } = useAuth();
+  const { selectedTicket } = useTickets();
+
+  const {
+    isLoading: mutateLoading,
+    isSuccess: mutateSuccess,
+    error,
+    mutateAsync,
+  } = useMutation(createReply);
+
+  async function createReply(value) {
+    const [{ ticketId, userId }, data] = value;
+
+    let { rst } = await axios.post(
+      `${
+        import.meta.env.VITE_API_SOCKET_URL
+      }/api/add/ticket/comment?ticketId=${ticketId}&createdBy=${userId}`,
+      data,
+      {
+        headers: {
+          // Overwrite Axios's automatically set Content-Type
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return rst;
+  }
+  async function onReply(values, { resetForm }) {
+    const { id: userId } = userState;
+    // console.log(userState);
+    const ticketId = selectedTicket.id;
+
+    const data = {
+      ...values,
+    };
+
+    await mutateAsync([{ ticketId, userId }, data, resetForm]);
+    resetForm();
+  }
   return (
     <Flex flex="0 0 auto" minH="50px" py="10px">
       <Formik
@@ -43,7 +87,7 @@ function TicketReplyForm() {
                 </FormControl>
 
                 <IconButton
-                  //   isLoading={mutateLoading}
+                  isLoading={mutateLoading}
                   aria-label="Call Segun"
                   size="md"
                   colorScheme="facebook"
@@ -60,5 +104,5 @@ function TicketReplyForm() {
     </Flex>
   );
 }
-function onReply() {}
+
 export default TicketReplyForm;

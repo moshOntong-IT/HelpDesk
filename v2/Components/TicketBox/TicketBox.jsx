@@ -7,9 +7,7 @@ import { useTickets } from "../Context/TicketContext";
 
 function TicketBox() {
   const { isLoading, selectedTicket } = useTickets();
-  useEffect(() => {
-    console.log("changed");
-  }, [selectedTicket]);
+
   return (
     <Box flex="5" bg="whiteAlpha.200" borderTopLeftRadius="3xl" p="20px">
       {!isLoading && (
