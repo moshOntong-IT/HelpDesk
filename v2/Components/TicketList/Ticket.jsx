@@ -9,7 +9,7 @@ function Ticket({ ticket }) {
   const { firstName, lastName } = user;
   const { setSelectedTicket } = useTickets();
   return (
-    <Link to="home" style={{ maxWidth: "280px", width: "100%" }}>
+    <Link to={`/home/box/${id}`} style={{ maxWidth: "280px", width: "100%" }}>
       <VStack
         align="left"
         onClick={() => {

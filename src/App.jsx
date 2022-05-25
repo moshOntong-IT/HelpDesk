@@ -28,6 +28,7 @@ function App() {
           <Route index element={<HelpDesk />} />
           <Route path="box" element={<HelpDesk />}>
             <Route index element={<TicketBox />} />
+            <Route path=":id" element={<TicketBox />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />}></Route>

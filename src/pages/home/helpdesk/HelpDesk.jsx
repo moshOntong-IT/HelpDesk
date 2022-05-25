@@ -18,7 +18,9 @@ function HelpDesk() {
         <Flex w="full" h="full" flexDirection="column">
           <NavHeader />
           {/* <TicketBox /> */}
-          <Outlet />
+          <Box flex="5" bg="whiteAlpha.200" borderTopLeftRadius="3xl" p="20px">
+            <Outlet />
+          </Box>
         </Flex>
       </Flex>
     </Flex>
