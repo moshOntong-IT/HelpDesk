@@ -19,7 +19,7 @@ function TicketList() {
   const { tickets, setTickets, setSelectedTicket, isLoading, setLoading } =
     useTickets();
   const { socket } = useSocket();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const {
     refetch,
     isLoading: queryIsLoading,
@@ -107,6 +107,11 @@ function TicketList() {
             },
           }}
         >
+          {!isLoading && tickets.length <= 0 && (
+            <Center w="full" h="full">
+              <Text color="white">No tickets</Text>
+            </Center>
+          )}
           {isLoading &&
             Array(3)
               .fill(1)

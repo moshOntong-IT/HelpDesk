@@ -1,19 +1,34 @@
 import { Avatar, Box, VStack, Text, Container, Flex } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useTickets } from "../Context/TicketContext";
-import TicketBoxChat from "./TicketBoxChat";
+import TicketBoxChat, { TicketChatSkeleton } from "./TicketBoxChat";
 import axios from "axios";
 import { useAuth } from "../../../Components/AuthProvider";
 import { useSocket } from "../Context/SocketProvider";
 import { useParams } from "react-router-dom";
+import { useQuery, useQueryClient } from "react-query";
 
 function TicketBoxChatArea() {
   const { selectedTicket, comments, setComments } = useTickets();
+  const queryClient = useQueryClient();
+  const { id } = useParams();
   const [newComments, setNewComments] = useState([]);
   const params = useParams();
   const { userState } = useAuth();
   const messagesEndRef = useRef(null);
   const { socket } = useSocket();
+
+  //TODO delete the selectedTIcket and use the params instead.
+
+  const {
+    refetch,
+    isLoading: queryIsLoading,
+    data,
+    isSuccess,
+  } = useQuery(["comments", id], getComments, {
+    enabled: false,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     // console.log("changed");
@@ -53,27 +68,30 @@ function TicketBoxChatArea() {
       // }
     });
 
-    return () => {
-      socket.off("add-comment", (newCommnet) => {
-        console.log("unmount");
-      });
-    };
+    // return () => {
+    //   socket.off("add-comment", (newCommnet) => {
+    //     console.log("unmount");
+    //   });
+    // };
   }, []);
   useEffect(() => {
     // const [_, id] = queryKey;
 
     const getAllComments = async () => {
-      const { id } = selectedTicket;
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/tickets/comments/${id}`
-      );
+      await refetch();
 
-      setNewComments(data);
+      if (isSuccess) {
+        setNewComments(data);
+      }
 
       // console.log(isOwner);
     };
 
     getAllComments();
+    return () => {
+      // console.log("unmount");
+      queryClient.resetQueries("comments");
+    };
   }, [selectedTicket]);
 
   return (
@@ -96,21 +114,38 @@ function TicketBoxChatArea() {
       }}
       spacing="20px"
     >
-      {newComments.map((data, index) => {
-        const { user, reply } = data;
-        const { firstName, lastName, id } = user;
-        return (
-          <TicketBoxChat
-            isOwner={id === userState.id}
-            key={index}
-            chat={reply}
-            name={firstName + " " + lastName}
-          />
-        );
-      })}
+      {queryIsLoading && (
+        <>
+          <TicketChatSkeleton isOwner={true} />
+          <TicketChatSkeleton isOwner={false} />
+          <TicketChatSkeleton isOwner={true} />
+        </>
+      )}
+      {isSuccess &&
+        newComments.map((data, index) => {
+          const { user, reply } = data;
+          const { firstName, lastName, id } = user;
+          return (
+            <TicketBoxChat
+              isOwner={id === userState.id}
+              key={index}
+              chat={reply}
+              name={firstName + " " + lastName}
+            />
+          );
+        })}
       <div ref={messagesEndRef} />
     </VStack>
   );
+  async function getComments({ queryKey }) {
+    const [_, id] = queryKey;
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/tickets/comments/${id}`
+    );
+
+    // console.log(typeof data);
+    return data;
+  }
 }
 
 export default TicketBoxChatArea;
