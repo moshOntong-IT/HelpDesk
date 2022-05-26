@@ -23,7 +23,7 @@ function TicketBoxChatArea() {
   const {
     refetch,
     isLoading: queryIsLoading,
-    data,
+    isFetching,
     isSuccess,
   } = useQuery(["comments", id], getComments, {
     enabled: false,
@@ -78,21 +78,20 @@ function TicketBoxChatArea() {
     // const [_, id] = queryKey;
 
     const getAllComments = async () => {
-      await refetch();
+      const { data } = await refetch();
 
-      if (isSuccess) {
-        setNewComments(data);
-      }
+      setNewComments(data);
 
       // console.log(isOwner);
     };
 
     getAllComments();
-    return () => {
-      // console.log("unmount");
-      queryClient.resetQueries("comments");
-    };
-  }, [selectedTicket]);
+
+    // return () => {
+    //   // console.log("unmount");
+    //   queryClient.resetQueries("comments");
+    // };
+  }, [id]);
 
   return (
     <VStack
@@ -114,14 +113,16 @@ function TicketBoxChatArea() {
       }}
       spacing="20px"
     >
-      {queryIsLoading && (
-        <>
-          <TicketChatSkeleton isOwner={true} />
-          <TicketChatSkeleton isOwner={false} />
-          <TicketChatSkeleton isOwner={true} />
-        </>
-      )}
+      {queryIsLoading ||
+        (isFetching && (
+          <>
+            <TicketChatSkeleton isOwner={true} />
+            <TicketChatSkeleton isOwner={false} />
+            <TicketChatSkeleton isOwner={true} />
+          </>
+        ))}
       {isSuccess &&
+        !isFetching &&
         newComments.map((data, index) => {
           const { user, reply } = data;
           const { firstName, lastName, id } = user;
