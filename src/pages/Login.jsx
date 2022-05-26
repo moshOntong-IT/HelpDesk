@@ -155,7 +155,7 @@ function Login() {
                       <Button
                         isLoading={isFetching}
                         type="submit"
-                        colorScheme="teal"
+                        colorScheme="facebook"
                         width="full"
                       >
                         Login

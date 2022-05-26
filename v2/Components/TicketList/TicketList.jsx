@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
-import Ticket from "./Ticket";
+import Ticket, { TicketSkeleton } from "./Ticket";
 import { useTickets } from "../Context/TicketContext";
 import { useSocket } from "../Context/SocketProvider";
 function TicketList() {
@@ -107,7 +107,12 @@ function TicketList() {
             },
           }}
         >
-          {isLoading && <Text color="white">Loading</Text>}
+          {isLoading &&
+            Array(3)
+              .fill(1)
+              .map((_, index) => {
+                return <TicketSkeleton key={index} />;
+              })}
           {!isLoading &&
             tickets.map((ticket, index) => {
               return <Ticket ticket={ticket} key={index} />;

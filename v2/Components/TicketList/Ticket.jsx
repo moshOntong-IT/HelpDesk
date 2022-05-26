@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Text, Badge, Flex, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Badge,
+  Flex,
+  VStack,
+  Skeleton,
+  HStack,
+} from "@chakra-ui/react";
 import TimeDiff from "js-time-diff";
 import { useTickets } from "../Context/TicketContext";
 import { Link } from "react-router-dom";
@@ -9,7 +17,10 @@ function Ticket({ ticket }) {
   const { firstName, lastName } = user;
   const { setSelectedTicket } = useTickets();
   return (
-    <Link to={`/home/box/${id}`} style={{ maxWidth: "280px", width: "100%" }}>
+    <Link
+      to={`/home/helpdesk/${id}`}
+      style={{ maxWidth: "280px", width: "100%" }}
+    >
       <VStack
         align="left"
         onClick={() => {
@@ -60,16 +71,24 @@ function Ticket({ ticket }) {
   );
 }
 
-const TicketSkeleton = () => {
+export const TicketSkeleton = () => {
   return (
-    <Box
+    <VStack
       w="full"
       maxWidth="280px"
       bg="whiteAlpha.200"
       p="10px"
+      h="100px"
       rounded="md"
       color="white"
-    ></Box>
+    >
+      <Skeleton w="full" h="20px" rounded="lg" />
+      <Skeleton w="full" h="10px" rounded="lg" />
+      <HStack w="full">
+        <Skeleton w="full" h="10px" rounded="lg" />
+        <Skeleton w="full" h="10px" rounded="lg" />
+      </HStack>
+    </VStack>
   );
 };
 

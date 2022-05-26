@@ -37,6 +37,7 @@ function TicketBoxChatArea() {
       }
     }
   }, [comments]);
+
   ///ADD
   useEffect(() => {
     socket.on("add-comment", (newComment) => {
