@@ -32,7 +32,7 @@ function NavHeader() {
         colorScheme="red"
         onClick={() => {
           logout();
-          navigate("login");
+          navigate("/login");
         }}
       >
         Logout

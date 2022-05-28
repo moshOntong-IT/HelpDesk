@@ -113,14 +113,13 @@ function TicketBoxChatArea() {
       }}
       spacing="20px"
     >
-      {queryIsLoading ||
-        (isFetching && (
-          <>
-            <TicketChatSkeleton isOwner={true} />
-            <TicketChatSkeleton isOwner={false} />
-            <TicketChatSkeleton isOwner={true} />
-          </>
-        ))}
+      {isFetching && (
+        <>
+          <TicketChatSkeleton isOwner={true} />
+          <TicketChatSkeleton isOwner={false} />
+          <TicketChatSkeleton isOwner={true} />
+        </>
+      )}
       {isSuccess &&
         !isFetching &&
         newComments.map((data, index) => {
