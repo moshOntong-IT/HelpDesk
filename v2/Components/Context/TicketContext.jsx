@@ -5,7 +5,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { io } from "socket.io-client";
 
 const TicketsContext = createContext();
 
@@ -13,6 +12,7 @@ export function useTickets() {
   return useContext(TicketsContext);
 }
 
+//! unused Ticket Provider
 function TicketProvider({ children }) {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState();

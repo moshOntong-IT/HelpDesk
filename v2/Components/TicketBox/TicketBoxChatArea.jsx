@@ -3,8 +3,6 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useTickets } from "../Context/TicketContext";
 import TicketBoxChat, { TicketChatSkeleton } from "./TicketBoxChat";
 import axios from "axios";
-import { useAuth } from "../../../Components/AuthProvider";
-import { useSocket } from "../Context/SocketProvider";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
 
@@ -16,7 +14,6 @@ function TicketBoxChatArea() {
   const params = useParams();
   const { userState } = useAuth();
   const messagesEndRef = useRef(null);
-  const { socket } = useSocket();
 
   //TODO delete the selectedTIcket and use the params instead.
 
@@ -52,46 +49,6 @@ function TicketBoxChatArea() {
       }
     }
   }, [comments]);
-
-  ///ADD
-  useEffect(() => {
-    socket.on("add-comment", (newComment) => {
-      setComments(newComment);
-      // console.log(ticket.id + " " + id);
-      // if (ticket.id === id) {
-      //   setComments(newComment);
-      // }
-      // if (comments != undefined) {
-      //   if (comments[0].user.id === id) {
-      //     setComments(newComment);
-      //   }
-      // }
-    });
-
-    // return () => {
-    //   socket.off("add-comment", (newCommnet) => {
-    //     console.log("unmount");
-    //   });
-    // };
-  }, []);
-  useEffect(() => {
-    // const [_, id] = queryKey;
-
-    const getAllComments = async () => {
-      const { data } = await refetch();
-
-      setNewComments(data);
-
-      // console.log(isOwner);
-    };
-
-    getAllComments();
-
-    // return () => {
-    //   // console.log("unmount");
-    //   queryClient.resetQueries("comments");
-    // };
-  }, [id]);
 
   return (
     <VStack

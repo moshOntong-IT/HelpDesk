@@ -1,13 +1,17 @@
 import React from "react";
 import { FiLogOut } from "react-icons/fi";
-import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, useDisclosure, useToast } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useAuth } from "../../../Components/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import AddTicket from "../../../Components/AddTicket";
+import { useAuth } from "../../../utils/hooks/customHooks";
 function NavHeader() {
-  const { userState, logout } = useAuth();
   // const { id } = userState;
+  //TODO delete the useAuth in AuthProvider
+
+  const toast = useToast();
+
+  const { logout, isLoading } = useAuth();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
@@ -29,6 +33,7 @@ function NavHeader() {
       </Button>
       <Button
         leftIcon={<FiLogOut />}
+        isLoading={isLoading}
         colorScheme="red"
         onClick={() => {
           logout();

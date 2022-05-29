@@ -1,15 +1,16 @@
 import { Box, Link, Text, Center, VStack, Flex } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Link as ReactLink, useNavigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../../Components/AuthProvider";
+import useAccount from "../../../utils/zustand/account";
 
 function Home() {
-  const { userState } = useAuth();
+  const account = useAccount((state) => state.account);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userState) {
+    console.log(account);
+    if (!account) {
       navigate("/login");
     }
   }, []);

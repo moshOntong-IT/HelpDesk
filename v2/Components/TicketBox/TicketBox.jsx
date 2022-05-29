@@ -14,19 +14,19 @@ function TicketBox() {
   // const { userState } = useAuth();
   // const path = useParams();
   // console.log(path);
-  useEffect(() => {
-    console.log("Asas");
-    if (selectedTicket === undefined) {
-      navigate("/home");
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log("Asas");
+  //   if (selectedTicket === undefined) {
+  //     navigate("/home");
+  //   }
+  // }, []);
 
   return (
     <Flex w="full" h="full" flexDirection="column">
       {selectedTicket != undefined && (
         <>
           <Box flex="1 0 auto" maxH="75vh">
-            <TicketBoxHeader ticket={selectedTicket} />
+            <TicketBoxHeader />
             <TicketBoxChatArea />
           </Box>
           <TicketReplyForm />

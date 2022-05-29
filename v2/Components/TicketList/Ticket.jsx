@@ -9,24 +9,17 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import TimeDiff from "js-time-diff";
-import { useTickets } from "../Context/TicketContext";
 import { Link } from "react-router-dom";
 function Ticket({ ticket }) {
-  const { createdAt, subject, status, ticketUuid, user, id } = ticket;
+  const { createdAt, subject, status, author, $id } = ticket;
 
-  const { firstName, lastName } = user;
-  const { setSelectedTicket } = useTickets();
   return (
     <Link
-      to={`/home/helpdesk/${id}`}
+      to={`/home/helpdesk/${$id}`}
       style={{ maxWidth: "280px", width: "100%" }}
     >
       <VStack
         align="left"
-        onClick={() => {
-          // navigate("home/2");
-          setSelectedTicket(ticket);
-        }}
         cursor="pointer"
         w="full"
         maxWidth="280px"
@@ -63,7 +56,7 @@ function Ticket({ ticket }) {
           color="whiteAlpha.800"
           fontSize="0.8rem"
         >
-          <Text>{firstName + " " + lastName}</Text>
+          <Text>{author}</Text>
           <Text>{TimeDiff(createdAt)}</Text>
         </Flex>
       </VStack>

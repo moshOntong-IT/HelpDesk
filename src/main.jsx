@@ -27,17 +27,15 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <SocketProvider>
-        <AuthProvider>
-          <TicketProvider>
-            <BrowserRouter>
-              <ChakraProvider theme={theme}>
-                <App />
-              </ChakraProvider>
-            </BrowserRouter>
-          </TicketProvider>
-        </AuthProvider>
-      </SocketProvider>
+      <AuthProvider>
+        <TicketProvider>
+          <BrowserRouter>
+            <ChakraProvider theme={theme}>
+              <App />
+            </ChakraProvider>
+          </BrowserRouter>
+        </TicketProvider>
+      </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

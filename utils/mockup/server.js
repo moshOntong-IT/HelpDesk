@@ -2,7 +2,6 @@ import { createServer, Factory, RestSerializer } from "miragejs";
 import { mockDepartments, mockRoles, mockUsers } from "./data";
 import { models } from "./model";
 import { faker } from "@faker-js/faker";
-import { camelCase, upperFirst } from "lodash";
 
 const AppSerializer = RestSerializer.extend({
   embed: true,

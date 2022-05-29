@@ -18,47 +18,65 @@ import React, { useState } from "react";
 import "@fontsource/outfit";
 import { Formik, Field } from "formik";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../../Components/AuthProvider";
-import { useQuery } from "react-query";
-import axios from "axios";
+import api from "../api/appwrite";
+import useAccount from "../../utils/zustand/account";
+import { useAuth } from "../../utils/hooks/customHooks";
+
 function Login() {
-  const { userState, setUser, isUserAuthenticated } = useAuth();
-  const [invalidUser, setInvalidUser] = useState(false);
+  //create a uerAccount for this
+  // const { userState, setUser, isUserAuthenticated } = useAuth();
+
+  const account = useAccount((state) => state.account);
+  const { isLoading, error, login } = useAuth();
+  // const [invalidUser, setInvalidUser] = useState(false);
+  // const [isLoading, setLoading] = useState(false);
+  // const [errorCode, setErrorCode] = useState();
   const navigate = useNavigate();
-  const { refetch, isError, isFetching, isSuccess } = useQuery(
-    "users",
-    getUsers,
-    {
-      refetchOnWindowFocus: false,
-      enabled: false,
-    }
-  );
 
   async function onSubmit(values) {
     const { account, password } = values;
-    await refetch().then(({ data }) => {
-      for (let user of data) {
-        const {
-          email: emailResult,
-          password: passwordResult,
-          username: usernameResult,
-        } = user;
 
-        if (
-          (account === emailResult || account === usernameResult) &&
-          password === passwordResult
-        ) {
-          setInvalidUser(false);
+    login(account, password);
+    // try {
+    //   setInvalidUser(false);
+    //   setLoading(true);
+    //   await api.createSession(account, password);
+    //   const data = await api.getAccount();
 
-          setUser(user);
-          navigate("/home");
-          break;
-        }
-      }
-      setInvalidUser(true);
-    });
+    //   setAccount(data);
+    // } catch (e) {
+    //   console.log(e.message);
+    //   setErrorCode(e.code);
+
+    //   if (e.code == "401") {
+    //     setInvalidUser(true);
+    //   }
+    // }
+
+    // setLoading(false);
+    // await refetch().then(({ data }) => {
+    //   for (let user of data) {
+    //     const {
+    //       email: emailResult,
+    //       password: passwordResult,
+    //       username: usernameResult,
+    //     } = user;
+
+    //     if (
+    //       (account === emailResult || account === usernameResult) &&
+    //       password === passwordResult
+    //     ) {
+    //       setInvalidUser(false);
+
+    //       setUser(user);
+    //       navigate("/home");
+    //       break;
+    //     }
+    //   }
+    //   setInvalidUser(true);
+    // });
   }
-  if (userState) {
+  if (account) {
     return <Navigate to="/home" replace />;
   }
   return (
@@ -91,17 +109,11 @@ function Login() {
                 I don't have an account
               </Link> */}
 
-              {(invalidUser || isError) && (
+              {error != undefined && (
                 <Alert status="error" flexDir="column" textAlign="center">
                   <AlertIcon />
-                  <AlertTitle>
-                    {invalidUser ? "Invalid User" : "Server Error"}
-                  </AlertTitle>
-                  <AlertDescription>
-                    {invalidUser
-                      ? "You have entered an invalid username or password"
-                      : "There is something wrong in server."}
-                  </AlertDescription>
+                  <AlertTitle>{error.message}</AlertTitle>
+                  <AlertDescription>{error.description}</AlertDescription>
                 </Alert>
               )}
             </VStack>
@@ -117,14 +129,12 @@ function Login() {
                   <form onSubmit={handleSubmit}>
                     <VStack spacing="20px">
                       <FormControl>
-                        <FormLabel htmlFor="account">
-                          Username/Email Address
-                        </FormLabel>
+                        <FormLabel htmlFor="account">Email Address</FormLabel>
                         <Field
                           as={Input}
                           id="account"
                           name="account"
-                          type="text"
+                          type="email"
                           variant="filled"
                           required
                         />
@@ -153,7 +163,7 @@ function Login() {
                         <FormErrorMessage>{errors.password}</FormErrorMessage>
                       </FormControl>
                       <Button
-                        isLoading={isFetching}
+                        isLoading={isLoading}
                         type="submit"
                         colorScheme="facebook"
                         width="full"
@@ -172,9 +182,4 @@ function Login() {
   );
 }
 
-async function getUsers() {
-  const { data } = await axios.get(import.meta.env.VITE_API_URL + "/api/users");
-
-  return data;
-}
 export default Login;

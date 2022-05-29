@@ -13,45 +13,13 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
 import Ticket, { TicketSkeleton } from "./Ticket";
-import { useTickets } from "../Context/TicketContext";
-import { useSocket } from "../Context/SocketProvider";
+import { useTickets } from "../../../utils/hooks/customHooks";
+import { useNavigate } from "react-router-dom";
+
 function TicketList() {
-  const { tickets, setTickets, setSelectedTicket, isLoading, setLoading } =
-    useTickets();
-  const { socket } = useSocket();
-  // const queryClient = useQueryClient();
-  const {
-    refetch,
-    isLoading: queryIsLoading,
+  const { isLoading, tickets } = useTickets();
+  const navigate = useNavigate();
 
-    isSuccess,
-  } = useQuery("tickets", getTickets, {
-    enabled: false,
-    refetchOnWindowFocus: false,
-  });
-  useEffect(() => {
-    socket.on("add-ticket", (newTicket) => {
-      setTickets(newTicket);
-    });
-
-    socket.on("update-ticket", (updateTicket) => {
-      setTickets(updateTicket);
-    });
-  }, []);
-
-  useEffect(() => {
-    const getTickets = async () => {
-      const { data } = await refetch();
-      // console.log(typeof data);
-      setTickets(data);
-      setSelectedTicket(data[0]);
-      setLoading(false);
-
-      // console.log(tickets);
-    };
-
-    getTickets();
-  }, []);
   // useEffect(() => {
   //   const getTickets = async () => {
   //     const { data } = await axios.get(
@@ -70,6 +38,13 @@ function TicketList() {
 
   // console.log(tickets);
 
+  useEffect(() => {
+    if (tickets != undefined && tickets.length > 0) {
+      navigate("/home/helpdesk/" + tickets[0].$id);
+    }
+  }, tickets);
+
+  //TODO ugma dapat makita na ang header and comments
   return (
     <Box flex="1 0 auto" minW="100px">
       <VStack h="full" w="full" spacing="20px">
@@ -126,13 +101,5 @@ function TicketList() {
       </VStack>
     </Box>
   );
-}
-
-async function getTickets() {
-  const { data } = await axios.get(
-    import.meta.env.VITE_API_URL + "/api/tickets"
-  );
-  // console.log(typeof data);
-  return data;
 }
 export default TicketList;
