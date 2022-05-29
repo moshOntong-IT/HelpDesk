@@ -14,7 +14,7 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@fontsource/outfit";
 import { Formik, Field } from "formik";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -26,12 +26,19 @@ function Login() {
   //create a uerAccount for this
   // const { userState, setUser, isUserAuthenticated } = useAuth();
 
-  const account = useAccount((state) => state.account);
-  const { isLoading, error, login } = useAuth();
+  const { isLoading, error, login, isSuccess } = useAuth();
   // const [invalidUser, setInvalidUser] = useState(false);
   // const [isLoading, setLoading] = useState(false);
   // const [errorCode, setErrorCode] = useState();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      api.getAccount().then(() => {
+        navigate("/home");
+      });
+    }
+  }, [isSuccess]);
 
   async function onSubmit(values) {
     const { account, password } = values;
@@ -76,9 +83,7 @@ function Login() {
     //   setInvalidUser(true);
     // });
   }
-  if (account) {
-    return <Navigate to="/home" replace />;
-  }
+
   return (
     <Box
       h="100vh"

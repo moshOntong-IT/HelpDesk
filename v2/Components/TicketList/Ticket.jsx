@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Box,
   Text,
@@ -85,4 +85,4 @@ export const TicketSkeleton = () => {
   );
 };
 
-export default Ticket;
+export const TicketMemo = memo(Ticket);

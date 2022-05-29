@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 import Navbar from "../../../../v2/Components/Navbar/Navbar";
 import NavHeader from "../../../../v2/Components/Navbar/NavHeader";
-import TicketBox from "../../../../v2/Components/TicketBox/TicketBox";
+
 import TicketList from "../../../../v2/Components/TicketList/TicketList";
 function HelpDesk() {
   return (

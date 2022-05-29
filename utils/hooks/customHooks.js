@@ -1,4 +1,4 @@
-import { Query } from "appwrite";
+import { Appwrite, Query } from "appwrite";
 import { useEffect, useState } from "react";
 import api from "../../src/api/appwrite";
 import { AppWriteConfig } from "../config";
@@ -7,14 +7,23 @@ import useAccount from "../zustand/account";
 const useAuth = () => {
   const [isLoading, setLoading] = useState(false);
   const setAccount = useAccount((state) => state.setAccount);
+  const [isSuccess, setSuccess] = useState(false);
   const [error, setError] = useState(undefined);
+
+  useEffect(() => {
+    return () => {
+      setLoading(false);
+      setSuccess(false);
+      setError(undefined);
+    };
+  }, []);
 
   const logout = () => {
     return new Promise(async (resolve, reject) => {
       try {
         setLoading(true);
         const rst = await api.deleteCurrentSession();
-        console.log(rst);
+        // console.log(rst);
         setLoading(false);
         resolve(rst);
 
@@ -30,7 +39,10 @@ const useAuth = () => {
       try {
         setLoading(true);
         setError(undefined);
-        await api.createSession(email, password);
+        const data = await api.createSession(email, password);
+        if (data != undefined) {
+          setSuccess(true);
+        }
 
         setLoading(false);
         // resolve(data);
@@ -70,13 +82,10 @@ const useAuth = () => {
         }
         reject(error);
       }
-
-      const data = await api.getAccount();
-      setAccount(data);
     });
   };
 
-  return { isLoading, error, login, logout };
+  return { isLoading, error, login, logout, isSuccess };
 };
 
 const useTickets = () => {
@@ -85,6 +94,35 @@ const useTickets = () => {
   const [isError, setError] = useState(false);
 
   useEffect(() => {
+    const unsubscribe = api
+      .provider()
+      .subscribe(
+        `collections.${AppWriteConfig.ticketsID}.documents`,
+        (data) => {
+          // console.log(
+          //   data.events.includes(
+          //     `collections.${AppWriteConfig.ticketsID}.documents.*.create`
+          //   )
+          // );
+          if (
+            data.events.includes(
+              `collections.${AppWriteConfig.ticketsID}.documents.*.create`
+            )
+          ) {
+            setTickets((prevTickets) => {
+              return [data.payload, ...prevTickets];
+            });
+          }
+
+          // console.log(prevTickets);
+        }
+      );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  useEffect(() => {
     //TODO create a catch for the error
     const fetchTickets = async () => {
       setLoading(true);
@@ -92,28 +130,94 @@ const useTickets = () => {
       if (documents && documents !== undefined) {
         setTickets(documents);
       }
+
       setLoading(false);
-      console.log(documents);
+      // console.log(documents);
     };
     fetchTickets();
+
+    return () => {
+      setTickets([]);
+    };
   }, []);
 
   return { tickets, setTickets, isLoading, setLoading, isError, setError };
 };
 
-const useTicket = ({ $id }) => {
+const useTicket = () => {
   const [isLoading, setLoading] = useState(false);
-  const [user, setUser] = useState({});
-  const [comments, comment] = useState([]);
+  const [ticket, setTicket] = useState({});
+  // const [comments, comment] = useState([]);
 
   useEffect(() => {
-    const fetchTicketDetails = async () => {
-      const data = await api.listDocuments(
-        AppWriteConfig.ticketsID,
-        Query.equal("$id", $id)
-      );
+    return () => {
+      setTicket(null);
     };
   }, []);
+
+  const fetchTicket = ({ $id }) => {
+    // console.log(typeof $id);
+    const fetchTicketDetails = async () => {
+      setLoading(true);
+      const data = await api.getTicket(AppWriteConfig.ticketsID, $id);
+
+      setLoading(false);
+
+      if (data != undefined) {
+        setTicket(data);
+      }
+    };
+
+    fetchTicketDetails();
+  };
+
+  return { ticket, isLoading, fetchTicket };
 };
 
-export { useTickets, useTicket, useAuth };
+const useAddTicket = () => {
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      setLoading(null);
+    };
+  }, []);
+
+  const addTicket = ({ data }) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        setLoading(true);
+        const values = {
+          subject: data.subject,
+          description: data.description,
+          createdAt: new Date().getTime(),
+          updatedAt: new Date().getTime(),
+          createdBy: data.user.$id,
+          status: "Pending",
+          author: data.user.name,
+          department: "Support Department",
+        };
+
+        await api.createDocument(
+          AppWriteConfig.ticketsID,
+          values,
+          ["role:member"],
+          [`user:${data.user.$id}`, `team:6291d66a93d0b2d31c5a`]
+        );
+
+        setLoading(false);
+        resolve(rst);
+      } catch (e) {
+        setLoading(false);
+        if (e.message.includes("Write permission")) {
+          reject({ message: "You don't have permission to create a ticket" });
+        }
+        reject({ message: "Something is wrong" });
+      }
+    });
+  };
+
+  return { addTicket, isLoading };
+};
+
+export { useTickets, useTicket, useAuth, useAddTicket };

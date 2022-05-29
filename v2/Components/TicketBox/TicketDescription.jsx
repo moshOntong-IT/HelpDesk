@@ -16,9 +16,7 @@ import {
 } from "@chakra-ui/react";
 import TimeDiff from "js-time-diff";
 function TicketDescription({ isOpen, onClose, data }) {
-  const { id, subject, ticketUuid, user, status, createdAt, description } =
-    data;
-  const { firstName, lastName } = user;
+  const { $id, subject, author, status, createdAt, description } = data;
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -44,14 +42,14 @@ function TicketDescription({ isOpen, onClose, data }) {
               </Heading>
               <HStack w="full" alignItems="baseline" justifyContent="">
                 <Text as="strong" fontSize="1rem">
-                  {firstName + " " + lastName}
+                  {author}
                 </Text>
                 <Text as="strong" fontSize="0.8rem">
                   ({TimeDiff(createdAt)})
                 </Text>
               </HStack>
               <Text fontSize="0.8rem" w="full">
-                {ticketUuid}
+                {$id}
               </Text>
               <Box w="full" rounded="md" p="10px">
                 <Text>{description}</Text>

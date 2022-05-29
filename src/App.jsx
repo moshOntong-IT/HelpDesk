@@ -1,17 +1,12 @@
 import "./App.css";
-import axios from "axios";
-import { useQuery } from "react-query";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Login from "./pages/Login";
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import HelpDesk from "./pages/home/helpdesk/HelpDesk";
-import Profile from "./pages/home/Profile";
-import Tickets from "./pages/home/helpdesk/Tickets";
-import Departments from "./pages/home/helpdesk/Departments";
-import Users from "./pages/home/helpdesk/Users";
-import TicketBox from "../v2/Components/TicketBox/TicketBox";
+
+import { TicketMemoBox } from "../v2/Components/TicketBox/TicketBox";
 
 // async function getDepartments() {
 //   const { data } = await axios.get("/api/comments");
@@ -27,8 +22,8 @@ function App() {
         <Route path="home" element={<Home />}>
           <Route index element={<HelpDesk />} />
           <Route path="helpdesk" element={<HelpDesk />}>
-            <Route index element={<TicketBox />} />
-            <Route path=":id" element={<TicketBox />} />
+            <Route index element={<TicketMemoBox />} />
+            <Route path=":id" element={<TicketMemoBox />} />
           </Route>
         </Route>
         <Route path="login" element={<Login />}></Route>

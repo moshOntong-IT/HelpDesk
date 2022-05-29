@@ -12,12 +12,12 @@ import {
 import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
-import Ticket, { TicketSkeleton } from "./Ticket";
+import { TicketMemo, TicketSkeleton } from "./Ticket";
 import { useTickets } from "../../../utils/hooks/customHooks";
 import { useNavigate } from "react-router-dom";
 
 function TicketList() {
-  const { isLoading, tickets } = useTickets();
+  const { isLoading, tickets, setTickets } = useTickets();
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -37,14 +37,27 @@ function TicketList() {
   // }, []);
 
   // console.log(tickets);
+  // useEffect(() => {
+  //   const unsubscribe = api
+  //     .provider()
+  //     .subscribe(
+  //       `collections.${AppWriteConfig.ticketsID}.documents`,
+  //       (data) => {
+  //         setTickets((prevTickets) => [...prevTickets, data.payload]);
+  //       }
+  //     );
+
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (tickets != undefined && tickets.length > 0) {
       navigate("/home/helpdesk/" + tickets[0].$id);
     }
-  }, tickets);
+  }, [isLoading]);
 
-  //TODO ugma dapat makita na ang header and comments
   return (
     <Box flex="1 0 auto" minW="100px">
       <VStack h="full" w="full" spacing="20px">
@@ -95,7 +108,7 @@ function TicketList() {
               })}
           {!isLoading &&
             tickets.map((ticket, index) => {
-              return <Ticket ticket={ticket} key={index} />;
+              return <TicketMemo ticket={ticket} key={index} />;
             })}
         </VStack>
       </VStack>

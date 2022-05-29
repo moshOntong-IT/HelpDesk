@@ -17,47 +17,44 @@ import {
   Input,
   Stack,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { Formik, Field } from "formik";
 import { useAuth } from "./AuthProvider";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useAddTicket } from "../utils/hooks/customHooks";
+import api from "../src/api/appwrite";
 function AddTicket({ isOpen, onClose }) {
-  const { userState } = useAuth();
-  const queryClient = useQueryClient();
-  const { isLoading, isSuccess, error, mutate } = useMutation(createTicket, {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries("tickets");
-      onClose();
-    },
-  });
-  function onSubmit(values) {
-    const { id } = userState;
-    const created_at = Date.now();
-    const update_at = Date.now();
+  const { addTicket, isLoading } = useAddTicket();
+  const toast = useToast();
+  async function onSubmit(values) {
+    const user = await api.getAccount();
 
-    const value = {
-      ...values,
-      status: "Pending",
-      created_at,
-      update_at,
-    };
-    mutate([id, value]);
+    addTicket({ data: { user, ...values } })
+      .then(() => {
+        toast({
+          title: "Ticket created.",
+          status: "success",
+          position: "bottom",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        onClose();
+      })
+      .catch((e) => {
+        toast({
+          title: e.message,
+          position: "bottom",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   }
 
-  async function createTicket(value) {
-    const [id, data] = value;
-    await axios.post(
-      `${import.meta.env.VITE_API_SOCKET_URL}/api/add/ticket?createdBy=${id}`,
-      data,
-      {
-        headers: {
-          // Overwrite Axios's automatically set Content-Type
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  }
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>

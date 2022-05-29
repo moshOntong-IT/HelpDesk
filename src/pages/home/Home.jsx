@@ -2,18 +2,24 @@ import { Box, Link, Text, Center, VStack, Flex } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Link as ReactLink, useNavigate, Outlet } from "react-router-dom";
 import useAccount from "../../../utils/zustand/account";
+import api from "../../api/appwrite";
 
 function Home() {
-  const account = useAccount((state) => state.account);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(account);
-    if (!account) {
+    api.getAccount().catch(() => {
       navigate("/login");
-    }
+    });
   }, []);
+
+  //   // isLogin.catch(() => {
+  //   //   navigate("/login");
+  //   // });
+  //   // if (!api.getAccount()) {
+  //   //   navigate("/login");
+  //   // }
+  // }, []);
   // console.log("running");
   return (
     <Box h="100vh" bgColor="gray.800" overflow="hidden" position="relative">

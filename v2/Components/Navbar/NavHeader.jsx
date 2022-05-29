@@ -7,9 +7,6 @@ import AddTicket from "../../../Components/AddTicket";
 import { useAuth } from "../../../utils/hooks/customHooks";
 function NavHeader() {
   // const { id } = userState;
-  //TODO delete the useAuth in AuthProvider
-
-  const toast = useToast();
 
   const { logout, isLoading } = useAuth();
   const navigate = useNavigate();

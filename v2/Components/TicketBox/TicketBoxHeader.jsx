@@ -16,9 +16,9 @@ import TicketDescription from "./TicketDescription";
 
 function TicketBoxHeader({ ticket }) {
   // const { ticket, selectedTicket } = useTickets();
-  const { user, createdAt, subject, status, id } = ticket;
-  const { firstName, lastName, department } = user;
-  const { name } = department;
+  const { author, createdAt, subject, status, $id, department } = ticket;
+  // const { firstName, lastName, department } = user;
+  // const { name } = department;
 
   const [isClosed, setClosed] = useState(status === "Closed");
   const [isLoading, setLoading] = useState(false);
@@ -47,12 +47,12 @@ function TicketBoxHeader({ ticket }) {
           //   justifyContent="space-evenly"
           color="whiteAlpha.700"
         >
-          <Text>{firstName + " " + lastName}</Text>
+          <Text>{author}</Text>
           <HStack>
-            <TimeIcon /> <Text>{createdAt}</Text>
+            <TimeIcon /> <Text>{new Date(createdAt).toDateString()}</Text>
           </HStack>
           <HStack>
-            <InfoIcon /> <Text>{name}</Text>
+            <InfoIcon /> <Text>{department}</Text>
           </HStack>
         </HStack>
       </VStack>

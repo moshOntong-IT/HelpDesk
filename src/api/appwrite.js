@@ -12,6 +12,7 @@ let api = {
       .setEndpoint(AppWriteConfig.endpoint)
       .setProject(AppWriteConfig.project);
     api.sdk = appwrite;
+
     return appwrite;
   },
 
@@ -38,7 +39,22 @@ let api = {
   },
 
   listDocuments: (collectionId) => {
-    return api.provider().database.listDocuments(collectionId);
+    return api
+      .provider()
+      .database.listDocuments(
+        collectionId,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        ["createdAt"],
+        ["DESC"]
+      );
+  },
+
+  getTicket: (collectionId, documentId) => {
+    return api.provider().database.getDocument(collectionId, documentId);
   },
 
   updateDocument: (collectionId, documentId, data, read, write) => {

@@ -18,9 +18,6 @@ import { useTickets } from "../Context/TicketContext";
 
 import axios from "axios";
 function TicketReplyForm() {
-  const { userState } = useAuth();
-  const { selectedTicket, tickets } = useTickets();
-
   const {
     isLoading: mutateLoading,
     isSuccess: mutateSuccess,
