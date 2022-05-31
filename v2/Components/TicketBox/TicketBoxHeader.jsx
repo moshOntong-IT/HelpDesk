@@ -20,13 +20,13 @@ function TicketBoxHeader({ ticket }) {
   // const { firstName, lastName, department } = user;
   // const { name } = department;
 
-  const [isClosed, setClosed] = useState(status === "Closed");
+  // const [isClosed, setClosed] = useState(status === "Closed");
   const [isLoading, setLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  useEffect(() => {
-    setClosed(status === "Closed");
-  }, [ticket]);
+  // useEffect(() => {
+  //   setClosed(status === "Closed");
+  // }, [ticket]);
 
   return (
     <Flex
@@ -67,7 +67,7 @@ function TicketBoxHeader({ ticket }) {
           Description
         </Button>
         <Button
-          isDisabled={isClosed}
+          isDisabled={status === "Closed"}
           isLoading={isLoading}
           colorScheme="red"
           size="lg"

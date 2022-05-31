@@ -1,4 +1,4 @@
-import { Appwrite } from "appwrite";
+import { Appwrite, Query } from "appwrite";
 import { AppWriteConfig } from "../../utils/config";
 let api = {
   sdk: null,
@@ -11,13 +11,10 @@ let api = {
     appwrite
       .setEndpoint(AppWriteConfig.endpoint)
       .setProject(AppWriteConfig.project);
+
     api.sdk = appwrite;
 
     return appwrite;
-  },
-
-  createAccount: (email, password, name) => {
-    return api.provider().account.create("unique()", email, password, name);
   },
 
   getAccount: () => {
@@ -38,6 +35,12 @@ let api = {
       .database.createDocument(collectionId, "unique()", data, read, write);
   },
 
+  executeCreateDocument: (payload) => {
+    return api
+      .provider()
+      .functions.createExecution(AppWriteConfig.addTicketFunctionID, payload);
+  },
+
   listDocuments: (collectionId) => {
     return api
       .provider()
@@ -51,6 +54,14 @@ let api = {
         ["createdAt"],
         ["DESC"]
       );
+  },
+
+  getComments: (collectionId, ticketId) => {
+    return api
+      .provider()
+      .database.listDocuments(collectionId, [
+        Query.equal("ticketId", ticketId),
+      ]);
   },
 
   getTicket: (collectionId, documentId) => {

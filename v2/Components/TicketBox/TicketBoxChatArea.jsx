@@ -5,50 +5,37 @@ import TicketBoxChat, { TicketChatSkeleton } from "./TicketBoxChat";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
+import { useComments } from "../../../utils/hooks/customHooks";
 
 function TicketBoxChatArea() {
-  const { selectedTicket, comments, setComments } = useTickets();
-  const queryClient = useQueryClient();
   const { id } = useParams();
-  const [newComments, setNewComments] = useState([]);
-  const params = useParams();
-  const { userState } = useAuth();
+  const { fetchComments, comments, isLoading, isError } = useComments();
   const messagesEndRef = useRef(null);
 
-  //TODO delete the selectedTIcket and use the params instead.
-
-  const {
-    refetch,
-    isLoading: queryIsLoading,
-    isFetching,
-    isSuccess,
-  } = useQuery(["comments", id], getComments, {
-    enabled: false,
-    refetchOnWindowFocus: false,
-  });
-
-  useEffect(() => {
-    // console.log("changed");
-  }, [selectedTicket]);
   useEffect(() => {
     scrollToBottom();
-  });
+  }, [comments]);
+
+  useEffect(() => {
+    fetchComments(id);
+  }, []);
+
   const scrollToBottom = useMemo(() => {
     return () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-  }, [setNewComments]);
-
-  useEffect(() => {
-    if (comments.length > 0) {
-      const { ticket } = comments[0];
-      // const { id } = selectedTicket;
-      // console.log(ticket.id == params.id);
-      if (ticket.id == params.id) {
-        setNewComments(comments);
-      }
-    }
   }, [comments]);
+
+  // useEffect(() => {
+  //   if (comments.length > 0) {
+  //     const { ticket } = comments[0];
+  //     // const { id } = selectedTicket;
+  //     // console.log(ticket.id == params.id);
+  //     if (ticket.id == params.id) {
+  //       setNewComments(comments);
+  //     }
+  //   }
+  // }, [comments]);
 
   return (
     <VStack
@@ -70,39 +57,29 @@ function TicketBoxChatArea() {
       }}
       spacing="20px"
     >
-      {isFetching && (
+      {isLoading && (
         <>
           <TicketChatSkeleton isOwner={true} />
           <TicketChatSkeleton isOwner={false} />
           <TicketChatSkeleton isOwner={true} />
         </>
       )}
-      {isSuccess &&
-        !isFetching &&
-        newComments.map((data, index) => {
-          const { user, reply } = data;
-          const { firstName, lastName, id } = user;
+      {!isLoading &&
+        comments.map((data, index) => {
+          const { text, replyBy, isOwner } = data;
+
           return (
             <TicketBoxChat
-              isOwner={id === userState.id}
+              isOwner={isOwner}
               key={index}
-              chat={reply}
-              name={firstName + " " + lastName}
+              chat={text}
+              name={replyBy}
             />
           );
         })}
       <div ref={messagesEndRef} />
     </VStack>
   );
-  async function getComments({ queryKey }) {
-    const [_, id] = queryKey;
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/tickets/comments/${id}`
-    );
-
-    // console.log(typeof data);
-    return data;
-  }
 }
 
 export default TicketBoxChatArea;

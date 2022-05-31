@@ -188,26 +188,33 @@ const useAddTicket = () => {
       try {
         setLoading(true);
         const values = {
-          subject: data.subject,
-          description: data.description,
-          createdAt: new Date().getTime(),
-          updatedAt: new Date().getTime(),
-          createdBy: data.user.$id,
-          status: "Pending",
-          author: data.user.name,
-          department: "Support Department",
+          user: data.user,
+          payload: {
+            subject: data.subject,
+            description: data.description,
+            createdAt: Date.now() / 1000,
+            updatedAt: Date.now() / 1000,
+            createdBy: data.user.$id,
+            status: "Pending",
+            author: data.user.name,
+            department: "Support Department",
+          },
         };
+        // console.log(values);
 
-        await api.createDocument(
-          AppWriteConfig.ticketsID,
-          values,
-          ["role:member"],
-          [`user:${data.user.$id}`, `team:6291d66a93d0b2d31c5a`]
-        );
+        await api.executeCreateDocument(JSON.stringify(values));
+
+        // await api.createDocument(
+        //   AppWriteConfig.ticketsID,
+        //   values,
+        //   [`user:${data.user.$id}`, `team:6291d66a93d0b2d31c5a`],
+        //   [`user:${data.user.$id}`]
+        // );
 
         setLoading(false);
-        resolve(rst);
+        resolve(values);
       } catch (e) {
+        // console.log(e);
         setLoading(false);
         if (e.message.includes("Write permission")) {
           reject({ message: "You don't have permission to create a ticket" });
@@ -220,4 +227,44 @@ const useAddTicket = () => {
   return { addTicket, isLoading };
 };
 
-export { useTickets, useTicket, useAuth, useAddTicket };
+const useComments = () => {
+  const [comments, setComments] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const [isError, setError] = useState(undefined);
+
+  const fetchComments = async (ticketID) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        setLoading(true);
+        const { documents } = await api.getComments(
+          AppWriteConfig.commentsID,
+          ticketID
+        );
+
+        // console.log(documents);
+        if (documents && documents !== undefined) {
+          setComments(documents);
+        }
+
+        setLoading(false);
+        resolve(documents);
+      } catch (e) {
+        setLoading(false);
+        setError({ message: "Comments are not available" });
+        reject(e.message);
+      }
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      setComments([]);
+      setLoading(false);
+      setError(undefined);
+    };
+  }, []);
+
+  return { comments, isLoading, fetchComments, isError };
+};
+
+export { useTickets, useTicket, useAuth, useAddTicket, useComments };

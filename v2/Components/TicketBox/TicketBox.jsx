@@ -29,9 +29,9 @@ function TicketBox() {
         <>
           <Box flex="1 0 auto" maxH="75vh">
             <TicketBoxHeader ticket={ticket} />
-            {/* <TicketBoxChatArea /> */}
+            <TicketBoxChatArea />
           </Box>
-          {/* <TicketReplyForm /> */}
+          <TicketReplyForm status={ticket.status} />
         </>
       )}
     </Flex>

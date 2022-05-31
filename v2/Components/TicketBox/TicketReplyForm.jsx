@@ -17,52 +17,51 @@ import { useAuth } from "../../../Components/AuthProvider";
 import { useTickets } from "../Context/TicketContext";
 
 import axios from "axios";
-function TicketReplyForm() {
-  const {
-    isLoading: mutateLoading,
-    isSuccess: mutateSuccess,
-    error,
-    mutateAsync,
-  } = useMutation(createReply);
+function TicketReplyForm({ status }) {
+  // const {
+  //   isLoading: mutateLoading,
+  //   isSuccess: mutateSuccess,
+  //   error,
+  //   mutateAsync,
+  // } = useMutation(createReply);
 
-  async function createReply(value) {
-    const [{ ticketId, userId }, data] = value;
+  // async function createReply(value) {
+  //   const [{ ticketId, userId }, data] = value;
 
-    let { rst } = await axios.post(
-      `${
-        import.meta.env.VITE_API_SOCKET_URL
-      }/api/add/ticket/comment?ticketId=${ticketId}&createdBy=${userId}`,
-      data,
-      {
-        headers: {
-          // Overwrite Axios's automatically set Content-Type
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return rst;
-  }
+  //   let { rst } = await axios.post(
+  //     `${
+  //       import.meta.env.VITE_API_SOCKET_URL
+  //     }/api/add/ticket/comment?ticketId=${ticketId}&createdBy=${userId}`,
+  //     data,
+  //     {
+  //       headers: {
+  //         // Overwrite Axios's automatically set Content-Type
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+  //   return rst;
+  // }
   async function onReply(values, { resetForm }) {
-    const { id: userId } = userState;
-    // console.log(userState);
-    const ticketId = selectedTicket.id;
-
-    const data = {
-      ...values,
-    };
-
-    await mutateAsync([{ ticketId, userId }, data, resetForm]);
-    resetForm();
+    //TODO implement the add reply document there
+    // const { id: userId } = userState;
+    // // console.log(userState);
+    // const ticketId = selectedTicket.id;
+    // const data = {
+    //   ...values,
+    // };
+    // await mutateAsync([{ ticketId, userId }, data, resetForm]);
+    // resetForm();
   }
 
   return (
     <Flex flex="0 0 auto" minH="50px" py="10px">
-      {selectedTicket.status === "Closed" && (
+      {status === "Closed" && (
         <Center flexGrow="1">
           <Text color="red.500">This ticket has already been closed.</Text>
         </Center>
       )}
-      {selectedTicket.status != "Closed" && (
+      {status != "Closed" && (
         <Formik
           initialValues={{
             reply: "",
@@ -93,7 +92,7 @@ function TicketReplyForm() {
                   </FormControl>
 
                   <IconButton
-                    isLoading={mutateLoading}
+                    // isLoading={mutateLoading}
                     aria-label="Call Segun"
                     size="md"
                     colorScheme="facebook"
